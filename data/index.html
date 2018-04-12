@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="language" content="fr" />
+		<meta name="author" content="Smart Technology Inc." />
+		<title>eLight</title>
+		<link rel="stylesheet" href="materialize.min.css" />
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+	<body>
+		<nav class="cyan">
+			<div class="nav-wrapper">
+				<span class="cyan-text">....</span>
+				<a href="#" class="brand-logo">eLight</a>
+			</div>
+		</nav>
+		<div class="row"></div>
+		<div class="row"></div>
+		<div class="row"></div>
+		<section class="center">
+			<div class="row">
+				<div class="container">
+					<img width="250em" src="technology.png" />
+				</div>
+			</div>
+			<div class="row">
+				<a id="btn-on" class="btn cyan waves-effect waves-light">
+					ON
+				</a>
+				<a id="btn-off" class="btn pink waves-effect waves-light">
+					OFF
+				</a>
+			</div>
+			<div class="row"></div>
+			<div class="row">
+				<a id="btn-state" class="btn amber waves-effect waves-light">
+					CHECK STATE
+				</a>
+			</div>
+		</section>
+		<div class="row"></div>
+		<!-- Logs -->
+		<div class="row container">
+			<div class="card" >
+				<div class="card-content">
+					<span class="card-title grey-text">System log</span>
+					<div class="row">
+						<div class="col l12 m12 s12 grey lighten-3" style='overflow-y: scroll; height: 150px;'>
+							<ul id="log" class="">
+								<li>
+									<span class="green-text"> # </span> <span class="blue-text">System launched</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<a id="clr" class="btn btn-flat grey waves-effect waves-green lighten-1 right">CLEAR</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row"></div>
+		<div class="row"></div>
+		<footer class="page-footer cyan">
+			<div class="container">
+				<div class="row center-align grey-text text-lighten-4">
+					<div class="col l6 m12 s12">
+						<div class="row"> Powered by Smart Technology .Inc </div>
+						<div class="row"> Departement of Research </div>
+					</div>
+					<div class="col l6 m12 s12">
+						<div class="row"> Copyright 2018 </div>
+						<div class="row"> Contact Us: (+229) 66 51 47 25 / 66 62 20 16 </div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-copyright">
+	            <div class="container">
+	            © 2018 Copyright Text
+	            <a class="grey-text text-lighten-4 right" href="http://smarttechbenin.github.io/smarttech">Smart Technology Benin</a>
+	            </div>
+          	</div>
+		</footer>
+	</body>
+		<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="materialize.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				var btnOn = $("#btn-on");
+				var btnOff = $("#btn-off");
+				var btnState = $("#btn-state");
+
+				$("#clr").on("click", function(){
+					var _date = new Date();
+					$("#log").html("<li><span class='green-text'> # </span> <span class='cyan-text'> Consol cleared. -- <span class='grey-text'>"+ _date.toString() +"</span></span></li>");
+				});
+
+				btnOn.on("click", function(){
+					$.ajax({
+						type: "GET",
+						url: "/on",
+						success: function(response, status){
+							var _date = new Date();
+							$("#log").append("<li><span class='green-text'> # </span> <span class='cyan-text'> Equipment updated to ON with success. -- <span class='grey-text'>"+ _date.toString() +"</span></span></li>");
+						},
+						error: function(response, status){
+							var _date = new Date();
+							$("#log").append("<li><span class='green-text'> # </span> <span class='pink-text'> Server unavailable </span> -- <span class='grey-text'>"+ _date.toString() +"</span></li>");
+						}
+					});
+				});
+
+				btnOff.on("click", function(){
+					$.ajax({
+						type: "GET",
+						url: "/off",
+						success: function(response, status){
+							var _date = new Date();
+							$("#log").append("<li><span class='green-text'> # </span> <span class='cyan-text'> Equipment updated to OFF with success. -- <span class='grey-text'>"+ _date.toString() +"</span></span></li>");
+						},
+						error: function(response, status){
+							var _date = new Date();
+							$("#log").append("<li><span class='green-text'> # </span> <span class='pink-text'> Server unavailable </span> -- <span class='grey-text'>"+ _date.toString() +"</span></li>");
+						}
+					});
+				});
+
+				/* Check the state of an equipement*/
+				btnState.on("click", function(){
+					$.ajax({
+						type: "GET",
+						url: "/query",
+						success: function(response, status){
+							var _date = new Date();
+							if(response == "1") { var state = "ON"; }
+							else { var state = "OFF"; }
+							$("#log").append("<li><span class='green-text'> # </span> <span class='amber-text'> Equipment "+ state +" -- <span class='grey-text'>"+ _date.toString() +"</span></span></li>");
+						},
+						error: function(response, status){
+							var _date = new Date();
+							$("#log").append("<li><span class='green-text'> # </span> <span class='pink-text'> Server unavailable </span> -- <span class='grey-text'>"+ _date.toString() +"</span></li>");
+						}
+					});
+				});
+			});
+		</script>
+</html>
